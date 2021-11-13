@@ -48,5 +48,14 @@ namespace BudgetTestProject
             var budgetService = new BudgetService(_budgetRepo);
             Assert.AreEqual(budgetService.Query(start, end), 10700);
         }
+
+        [Test]
+        public void CalculateNoBudgetMonth()
+        {
+            var start = new DateTime(2021, 8, 15);
+            var end = new DateTime(2021, 8, 18);
+            var budgetService = new BudgetService(_budgetRepo);
+            Assert.AreEqual(budgetService.Query(start, end), 0);
+        }
     }
 }
