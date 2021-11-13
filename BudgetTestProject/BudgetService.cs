@@ -13,7 +13,10 @@ namespace BudgetTestProject
 
         public double Query(DateTime start, DateTime end)
         {
-            throw new NotImplementedException();
+            var totalDay = end.Day - start.Day + 1;
+            var budget = _budgetRepo.GetAll().Find(x=>x.YearMonth == $"{start.Date.Year}{start.Date.Month}");
+            var amountPerDay = budget.Amount / totalDay;
+            return amountPerDay * totalDay;
         }
     }
 }

@@ -13,12 +13,12 @@ namespace BudgetTestProject
             var budgetRepo = Substitute.For<IBudgetRepo>();
             budgetRepo.GetAll().Returns(new List<Budget>()
             {
-                new() { YearMonth = "202111", Amount = 3100 },
+                new() { YearMonth = "202111", Amount = 3000 },
             });
-            var startDataTime = new DateTime(2021, 11, 01);
-            var endDataTime = new DateTime(2021, 11, 31);
+            var start = new DateTime(2021, 11, 01);
+            var end = new DateTime(start.AddMonths(1).Year, start.AddMonths(1).Month, 1).AddDays(-1);
             var budgetService = new BudgetService(budgetRepo);
-            Assert.AreEqual(budgetService.Query(startDataTime, endDataTime), 3000);
+            Assert.AreEqual(budgetService.Query(start, end), 3000);
         }
     }
 }
