@@ -27,5 +27,14 @@ namespace BudgetTestProject
             var budgetService = new BudgetService(_budgetRepo);
             Assert.AreEqual(budgetService.Query(start, end), 3000);
         }
+
+        [Test]
+        public void CalculateOneDay()
+        {
+            var start = new DateTime(2021, 11, 01);
+            var end = new DateTime(2021, 11, 01);
+            var budgetService = new BudgetService(_budgetRepo);
+            Assert.AreEqual(budgetService.Query(start, end), 100);
+        }
     }
 }
