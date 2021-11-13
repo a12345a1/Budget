@@ -17,18 +17,25 @@ namespace BudgetTestProject
         {
             var money = 0;
             var totalDay = GetAllDateTime(start, end);
-            var monthGroup = totalDay.GroupBy(x => x.Month);
-            using var enumerator = monthGroup.GetEnumerator();
+            var monthsGroup = totalDay.GroupBy(x => x.Month);
+            using var enumerator = monthsGroup.GetEnumerator();
             while (enumerator.MoveNext())
             {
-                var item = enumerator.Current.First();
-                var totalDaysInMonth = DateTime.DaysInMonth(item.Year, item.Month);
-                var budget = GetBudget(item.Year, item.Month);
-                var amountPerDay = budget.Amount / totalDaysInMonth;
-                money += amountPerDay * enumerator.Current.Count();
+                var perMonthGroup = enumerator.Current;
+                var item = perMonthGroup.First();
+                var daysInMonth = perMonthGroup.Count();
+                money += CalculateMoney(item, daysInMonth);
             }
 
             return money;
+        }
+
+        private int CalculateMoney(DateTime item, int daysInMonth)
+        {
+            var totalDaysInMonth = DateTime.DaysInMonth(item.Year, item.Month);
+            var budgetAmount = GetBudgetAmount(item.Year, item.Month);
+            var amountPerDay = budgetAmount / totalDaysInMonth;
+            return amountPerDay * daysInMonth;
         }
 
         private IEnumerable<DateTime> GetAllDateTime(DateTime start, DateTime end)
@@ -39,9 +46,11 @@ namespace BudgetTestProject
             }
         }
 
-        private Budget GetBudget(int year, int month)
+        private int GetBudgetAmount(int year, int month)
         {
-            return _budgetRepo.GetAll().Find(x => x.YearMonth == $"{year}{month.ToString("00")}");
+            var budget = _budgetRepo.GetAll().FirstOrDefault(x => x.YearMonth == $"{year}{month:00}");
+            if (budget == null) return 0;
+            return budget.Amount;
         }
     }
 }
