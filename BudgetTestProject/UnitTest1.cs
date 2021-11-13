@@ -15,7 +15,10 @@ namespace BudgetTestProject
             _budgetRepo = Substitute.For<IBudgetRepo>();
             _budgetRepo.GetAll().Returns(new List<Budget>
             {
-                new() { YearMonth = "202111", Amount = 3000 }
+                new() { YearMonth = "202109", Amount = 3000 },
+                new() { YearMonth = "202110", Amount = 3100 },
+                new() { YearMonth = "202111", Amount = 3000 },
+                new() { YearMonth = "202112", Amount = 6200 },
             });
         }
 
@@ -35,6 +38,15 @@ namespace BudgetTestProject
             var end = new DateTime(2021, 11, 01);
             var budgetService = new BudgetService(_budgetRepo);
             Assert.AreEqual(budgetService.Query(start, end), 100);
+        }
+
+        [Test]
+        public void CalculateCrossMouth()
+        {
+            var start = new DateTime(2021, 9, 15);
+            var end = new DateTime(2021, 12, 15);
+            var budgetService = new BudgetService(_budgetRepo);
+            Assert.AreEqual(budgetService.Query(start, end), 10700);
         }
     }
 }
